@@ -1,0 +1,5 @@
+Django==1.11.20
+pkg-resources==0.0.0
+pytz==2018.9
+pyudev==0.21.0
+six==1.12.0
