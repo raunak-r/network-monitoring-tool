@@ -2,5 +2,8 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
+from django.views.generics import View
+from django.http import HttpRepsponse, JsonResponse
 
-# Create your views here.
+class Logs(View):
+	def post(self, request):

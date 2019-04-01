@@ -1,6 +1,8 @@
 import pyudev
 import time
 from functools import partial
+import requests
+import socket
 
 def getNumberOfConnections(context):
 	totalConnected = 0
@@ -18,11 +20,28 @@ def synchronousMonitoring(context):
 	# for action, device in monitor:
 	# 	if 'ID_FS_TYPE' in device:
 	# 		print('{0} partition {1}'\
-	# 				.format(action, device.get('ID_FS_LABEL')))
+	# 				.form*at(action, device.get('ID_FS_LABEL')))
 
 	# Runs for the next 2 hours once an event is logged
 	for device in iter(partial(monitor.poll, 7200), None):
+		postLogs()
 		print('{0.action} on {1}' .format(device, device.get('ID_FS_LABEL')))
+
+def postLogs():
+	hostname, ip = getSystemInfo()
+	url = "http://"
+	params = {
+		'hostname'	:	hostname,
+		'ip'		:	ip,
+		'message'	:	"USB CONNECTED",
+	}
+
+	r = requests.post(url = url, data = params)
+
+def getSystemInfo():
+	hostname = socket.gethostname()
+	ip = socket.gethostbyname(hostname)
+	return (hostname, ip)
 
 if __name__ == "__main__":
 	context = pyudev.Context()
