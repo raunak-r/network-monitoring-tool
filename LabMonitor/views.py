@@ -10,14 +10,18 @@ import json, os, io
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Logs(View):
+	# TRy catch blocks.
+	# At each receiving request, make a sound or something.
+
 	def post(self, request):
 		info = {
 			'hostname' : request.POST.get('hostname', ''),
 			'ip' : request.POST.get('ip', ''),
+			'time' : request.POST.get('time', ''),
 			'message' : request.POST.get('message', '')
 		}
 
-		with open(BASE_DIR + '/../file.txt', 'w') as outfile:
-			outfile.write(json.dumps(info))
+		with open(BASE_DIR + '/../LabReport.txt', 'a+') as outfile:
+			outfile.write(json.dumps(info, sort_keys = False, indent = 4))
 
 		return HttpResponse('Info Saved Successfully', status = 200)

@@ -1,0 +1,21 @@
+{
+    "ip": "127.0.1.1", 
+    "message": "USB Connected - add on None", 
+    "hostname": "raunak-HP-Pavilion-15-Notebook-PC", 
+    "time": "Tue Apr  2 19:55:43 2019"
+}{
+    "ip": "127.0.1.1", 
+    "message": "USB Connected - add on UBUNTU_18_0", 
+    "hostname": "raunak-HP-Pavilion-15-Notebook-PC", 
+    "time": "Tue Apr  2 19:55:43 2019"
+}{
+    "ip": "127.0.1.1", 
+    "message": "USB Removed - remove on UBUNTU_18_0", 
+    "hostname": "raunak-HP-Pavilion-15-Notebook-PC", 
+    "time": "Tue Apr  2 19:55:49 2019"
+}{
+    "ip": "127.0.1.1", 
+    "message": "USB Removed - remove on None", 
+    "hostname": "raunak-HP-Pavilion-15-Notebook-PC", 
+    "time": "Tue Apr  2 19:55:49 2019"
+}
