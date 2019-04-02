@@ -29,7 +29,7 @@ def synchronousMonitoring(context):
 
 def postLogs():
 	hostname, ip = getSystemInfo()
-	url = "http://"
+	url = "http://localhost:8000/recordlogs/"
 	params = {
 		'hostname'	:	hostname,
 		'ip'		:	ip,
