@@ -10,7 +10,6 @@ import json, os, io
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Logs(View):
-	# TRy catch blocks.
 	# At each receiving request, make a sound or something.
 
 	def post(self, request):

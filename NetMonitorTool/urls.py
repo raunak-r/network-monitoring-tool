@@ -19,6 +19,6 @@ from django.contrib import admin
 from LabMonitor.views import *
 
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls),
     url(r'^recordlogs/', Logs.as_view()),
 ]
