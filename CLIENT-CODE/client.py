@@ -1,16 +1,23 @@
 import pyudev
 import time
 from functools import partial
-import requests, socket, datetime
+import requests, socket
 
-def getNumberOfConnections(context):
-	totalConnected = 0
-	for device in context.list_devices(subsystem = 'block', DEVTYPE = 'partition'):
-		print(device)
-		totalConnected += 1
-	return totalConnected
+clientStatus = True
+usb = False
+internet = False
+lan = False
+
+# def getNumberOfConnections(context):
+# 	totalConnected = 0
+# 	for device in context.list_devices(subsystem = 'block', DEVTYPE = 'partition'):
+# 		print(device)
+# 		totalConnected += 1
+# 	return totalConnected
 
 def synchronousMonitoring(context):
+	global usb, internet, lan, clientStatus
+	
 	try:
 		# Creates a Monitor which keeps on running
 		monitor = pyudev.Monitor.from_netlink(context)
@@ -29,28 +36,31 @@ def synchronousMonitoring(context):
 			msgstring = '{0.action} on {1}' .format(device, device.get('ID_FS_LABEL'))
 			print(msgstring)
 
-			if device.action == 'add' and device.get('ID_FS_LABEL') != 'None':
-				postLogs('USB Connected - ' + msgstring)
-			elif device.action == 'remove' and device.get('ID_FS_LABEL') != 'None':
-				postLogs('USB Removed - ' + msgstring)
+			if device.action == 'add' or device.action == 'remove':
+				usb = True
+				postLogsToServer()
 
 		# FOR INTERNET
 
 		# FOR LAN
 	except Exception, e:
+		clientStatus = False
+		postLogsToServer()
+
 		print(e)
 		synchronousMonitoring(context)
 
-
-def postLogs(message):
+def postLogsToServer():
 	hostname, ip = getSystemInfo()
 	url = "http://localhost:8000/recordlogs/"
+
 	params = {
 		'hostname'	:	hostname,
 		'ip'		:	ip,
-		'time'		:	str(time.ctime()),
-		'message'	:	message,
-
+		'clientStatus':	clientStatus,
+		'usbDetected':	usb,
+		'internetDetected': internet,
+		'lanDetected':	lan,
 	}
 
 	r = requests.post(url = url, data = params)
@@ -60,9 +70,18 @@ def getSystemInfo():
 	ip = socket.gethostbyname(hostname)
 	return (hostname, ip)
 
-if __name__ == "__main__":
+
+
+try:
+	# Up and Running	
+	clientStatus = True
+	postLogsToServer()
+
 	context = pyudev.Context()
 	# print(getNumberOfConnections(context))
-
-	t0 = time.time()
 	synchronousMonitoring(context)
+
+except Exception, e:
+	print(e)
+	clientStatus = False
+	postLogsToServer()

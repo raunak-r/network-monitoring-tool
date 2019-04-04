@@ -1,7 +1,11 @@
-import os
+# import os
 
-def startup():
-	BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-	open(BASE_DIR + '/../LabReport.txt', 'w').close()
+# def startup():
+	# Clear Database
+	# LabReport.objects.all().delete()
 
-startup()
+	# Clear LabReport Txt File
+	# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+	# open(BASE_DIR + '/../LabReport.txt', 'w').close()
+
+# startup()
