@@ -3,11 +3,6 @@ import time
 from functools import partial
 import requests, socket
 
-clientStatus = True
-usb = False
-internet = False
-lan = False
-
 # def getNumberOfConnections(context):
 # 	totalConnected = 0
 # 	for device in context.list_devices(subsystem = 'block', DEVTYPE = 'partition'):
@@ -15,9 +10,7 @@ lan = False
 # 		totalConnected += 1
 # 	return totalConnected
 
-def synchronousMonitoring(context):
-	global usb, internet, lan, clientStatus
-	
+def synchronousMonitoring(context):	
 	try:
 		# Creates a Monitor which keeps on running
 		monitor = pyudev.Monitor.from_netlink(context)
@@ -30,37 +23,28 @@ def synchronousMonitoring(context):
 		# 				.form*at(action, device.get('ID_FS_LABEL')))
 
 		# Runs for the next 2 hours once an event is logged
-
-		# FOR USB
 		for device in iter(partial(monitor.poll, 7200), None):
 			msgstring = '{0.action} on {1}' .format(device, device.get('ID_FS_LABEL'))
 			print(msgstring)
 
 			if device.action == 'add' or device.action == 'remove':
-				usb = True
-				postLogsToServer()
+				postLogsToServer(1, True)
 
-		# FOR INTERNET
-
-		# FOR LAN
 	except Exception, e:
-		clientStatus = False
-		postLogsToServer()
+		postLogsToServer(0, False)
 
 		print(e)
 		synchronousMonitoring(context)
 
-def postLogsToServer():
+def postLogsToServer(flag, booleanStatus):
 	hostname, ip = getSystemInfo()
 	url = "http://localhost:8000/recordlogs/"
 
 	params = {
 		'hostname'	:	hostname,
 		'ip'		:	ip,
-		'clientStatus':	clientStatus,
-		'usbDetected':	usb,
-		'internetDetected': internet,
-		'lanDetected':	lan,
+		'flag':	flag,
+		'booleanStatus' : booleanStatus
 	}
 
 	r = requests.post(url = url, data = params)
@@ -70,12 +54,9 @@ def getSystemInfo():
 	ip = socket.gethostbyname(hostname)
 	return (hostname, ip)
 
-
-
 try:
-	# Up and Running	
-	clientStatus = True
-	postLogsToServer()
+	# Up and Running
+	postLogsToServer(0, True)
 
 	context = pyudev.Context()
 	# print(getNumberOfConnections(context))
@@ -83,5 +64,4 @@ try:
 
 except Exception, e:
 	print(e)
-	clientStatus = False
-	postLogsToServer()
+	postLogsToServer(0, False)

@@ -16,28 +16,33 @@ class Logs(View):
 	# At each receiving request, make a sound or something.
 
 	def post(self, request):
-		# import pdb; pdb.set_trace()
 		hostname = str(request.POST.get('hostname', ''))
 		ip = str(request.POST.get('ip', ''))
-		clientStatus = request.POST.get('clientStatus', '')
-		usb = request.POST.get('usbDetected', '')
-		internet = request.POST.get('internetDetected', '')
-		lan = request.POST.get('lanDetected', '')
-		
-		print(ip + ' ' + clientStatus + ' ' + usb + ' ' + internet + ' ' + lan) 
-		
-		flag = False
-		if usb == 'True' or internet == 'True' or lan == 'True':
-			flag = True
+		flag = int(request.POST.get('flag', ''))
+		booleanStatus = request.POST.get('booleanStatus', '')
 
-		entry = LabReport(clientIP = ip,\
+		print(ip + ' ' + str(flag) + ' ' + booleanStatus)
+
+		if flag == 0:	#Up and Running. Create New Entry
+			entry = LabReport(clientIP = ip,\
 						clientName = hostname,\
-						clientStatus = clientStatus,
-						flag = flag,
-						usbDetected = usb,
-						internetDetected = internet,
-						lanDetected = lan)
-		entry.save()
+						clientStatus = booleanStatus,
+						flag = False,
+						usbDetected = False,
+						internetDetected = False,
+						lanDetected = False)
+			entry.save()
+		elif flag == 1:	# USB Flag
+			entry = LabReport.objects.get(clientIP = ip)
+			entry.usbDetected = booleanStatus
+			entry.flag = booleanStatus
+			entry.save()
+		elif flag == 2:	# Internet and LAN Flag
+			entry = LabReport.objects.get(clientIP = ip)
+			entry.internetDetected = booleanStatus
+			entry.lanDetected = booleanStatus
+			entry.flag = booleanStatus
+			entry.save()
 
 		# with open(BASE_DIR + '/../LabReport.txt', 'a+') as outfile:
 		# 	outfile.write(json.dumps(info, sort_keys = False, indent = 4))
