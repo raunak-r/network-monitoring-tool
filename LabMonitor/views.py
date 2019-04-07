@@ -13,8 +13,7 @@ from models import LabReport
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Logs(View):
-	# At each receiving request, make a sound or something.
-
+	
 	def post(self, request):
 		hostname = str(request.POST.get('hostname', ''))
 		ip = str(request.POST.get('ip', ''))
@@ -44,7 +43,6 @@ class Logs(View):
 			entry.flag = booleanStatus
 			entry.save()
 
-		# with open(BASE_DIR + '/../LabReport.txt', 'a+') as outfile:
-		# 	outfile.write(json.dumps(info, sort_keys = False, indent = 4))
+		os.system('spd-say "ALERT"')
 
 		return HttpResponse('Info Saved Successfully', status = 200)

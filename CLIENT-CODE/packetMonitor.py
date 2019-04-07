@@ -1,4 +1,4 @@
-from scapy.all import sniff, TCP
+from scapy.all import sniff, TCP, HTTP, FTP
 import time, socket, requests
 
 def timer(x):
@@ -9,7 +9,10 @@ def timer(x):
 
 def mainfunc(x):
 	print(x.summary())
-	if x.haslayer(TCP):
+	print(x.show())
+	print('\n\n\n')
+
+	if x.haslayer(TCP) or x.haslayer(HTTP) or x.haslayer(FTP):
 		postLogsToServer(2, True)
 
 	return True
@@ -33,6 +36,9 @@ def getSystemInfo():
 	return (hostname, ip)
 
 start = time.time()
+
+# Up and Running
+postLogsToServer(0, False)
 
 sniff(filter="ip",\
 	# prn=lambda x:x.sprintf("{IP:%IP.src% -> %IP.dst%\n}"),\

@@ -1,7 +1,10 @@
 import pyudev
 import time
 from functools import partial
-import requests, socket
+import requests, socket, os
+import datetime
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # def getNumberOfConnections(context):
 # 	totalConnected = 0
@@ -16,16 +19,13 @@ def synchronousMonitoring(context):
 		monitor = pyudev.Monitor.from_netlink(context)
 		monitor.filter_by('block')
 
-		# action can be add, remove for the corresponding device
-		# for action, device in monitor:
-		# 	if 'ID_FS_TYPE' in device:
-		# 		print('{0} partition {1}'\
-		# 				.form*at(action, device.get('ID_FS_LABEL')))
-
 		# Runs for the next 2 hours once an event is logged
 		for device in iter(partial(monitor.poll, 7200), None):
 			msgstring = '{0.action} on {1}' .format(device, device.get('ID_FS_LABEL'))
 			print(msgstring)
+
+			with open(BASE_DIR + '/clientUSBReport.txt', 'a+') as outfile:
+				outfile.write(str(datetime.datetime.now()) + '\t' + msgstring + '\n')
 
 			if device.action == 'add' or device.action == 'remove':
 				postLogsToServer(1, True)
@@ -55,6 +55,9 @@ def getSystemInfo():
 	return (hostname, ip)
 
 try:
+	with open(BASE_DIR + '/clientUSBReport.txt', 'w') as outfile:
+		outfile.close()
+
 	# Up and Running
 	postLogsToServer(0, True)
 
