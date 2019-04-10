@@ -19,7 +19,7 @@ class LabReport(models.Model):
 	internetDetected = models.BooleanField(default = False)
 	# internetTimestamp = models.DateField(null = True)
 	
-	lanDetected = models.BooleanField(default = False)
+	# lanDetected = models.BooleanField(default = False)
 	# lanTimestamp = models.DateField(null = True)
 
 	def __str__(self):

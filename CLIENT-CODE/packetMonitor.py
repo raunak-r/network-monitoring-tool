@@ -1,5 +1,9 @@
-from scapy.all import sniff, TCP, HTTP, FTP
+from scapy.all import sniff, TCP
 import time, socket, requests
+import os, datetime
+
+stars = lambda n: "*" * n
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def timer(x):
 	if time.time() - start >= 1000:
@@ -8,18 +12,26 @@ def timer(x):
 		return False
 
 def mainfunc(x):
+	with open(BASE_DIR + '/clientPacketReport.txt', 'a+') as outfile:
+		outfile.write(str(datetime.datetime.now()) + '\t' + str(x.summary()) + '\n')
+	
 	print(x.summary())
 	print(x.show())
 	print('\n\n\n')
 
-	if x.haslayer(TCP) or x.haslayer(HTTP) or x.haslayer(FTP):
+	# return "\n".join((
+ #        stars(40) + "GET PACKET" + stars(40),
+ #        "\n".join(x.sprintf("{Raw:%Raw.load%}").split(r"\r\n")),
+ #        stars(90)))
+
+	if x.haslayer(TCP):
 		postLogsToServer(2, True)
 
 	return True
 
 def postLogsToServer(flag, booleanStatus):
 	hostname, ip = getSystemInfo()
-	url = "http://localhost:8000/recordlogs/"
+	url = "http://172.16.46.10:8000/recordlogs/"
 
 	params = {
 		'hostname'	:	hostname,
@@ -38,12 +50,16 @@ def getSystemInfo():
 start = time.time()
 
 # Up and Running
-postLogsToServer(0, False)
+with open(BASE_DIR + '/clientPacketReport.txt', 'w') as outfile:
+	outfile.close()
+
+postLogsToServer(0, True)
 
 sniff(filter="ip",\
 	# prn=lambda x:x.sprintf("{IP:%IP.src% -> %IP.dst%\n}"),\
 	prn = mainfunc,
 	count = 0,
+	# lfilter = lambda p: "GET" in str(p),
 	stop_filter = timer)
 	
  

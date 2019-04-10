@@ -8,7 +8,7 @@ from models import LabReport
 
 class LabReportModelAdmin(admin.ModelAdmin):
 	list_display = [field.name for field in LabReport._meta.get_fields()]
-	list_filter = ['flag', 'usbDetected', 'internetDetected', 'lanDetected']
+	list_filter = ['flag', 'usbDetected', 'internetDetected']
 	
 	class Meta:
 		model = LabReport

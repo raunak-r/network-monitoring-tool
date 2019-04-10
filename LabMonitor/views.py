@@ -28,8 +28,8 @@ class Logs(View):
 						clientStatus = booleanStatus,
 						flag = False,
 						usbDetected = False,
-						internetDetected = False,
-						lanDetected = False)
+						internetDetected = False)
+						# lanDetected = False)
 			entry.save()
 		elif flag == 1:	# USB Flag
 			entry = LabReport.objects.get(clientIP = ip)
@@ -39,7 +39,7 @@ class Logs(View):
 		elif flag == 2:	# Internet and LAN Flag
 			entry = LabReport.objects.get(clientIP = ip)
 			entry.internetDetected = booleanStatus
-			entry.lanDetected = booleanStatus
+			# entry.lanDetected = booleanStatus
 			entry.flag = booleanStatus
 			entry.save()
 
