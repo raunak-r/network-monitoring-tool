@@ -31,7 +31,7 @@ def mainfunc(x):
 
 def postLogsToServer(flag, booleanStatus):
 	hostname, ip = getSystemInfo()
-	url = "http://172.16.46.10:8000/recordlogs/"
+	url = "http://192.168.43.18:8000/recordlogs/"
 
 	params = {
 		'hostname'	:	hostname,

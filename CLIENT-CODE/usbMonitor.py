@@ -50,8 +50,12 @@ def postLogsToServer(flag, booleanStatus):
 	r = requests.post(url = url, data = params)
 
 def getSystemInfo():
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	s.connect(("8.8.8.8", 80))
+	ip = s.getsockname()[0]
+
 	hostname = socket.gethostname()
-	ip = socket.gethostbyname(hostname)
+	# ip = socket.gethostbyname(hostname)
 	return (hostname, ip)
 
 try:
