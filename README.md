@@ -9,8 +9,7 @@ server and the rest 99 PCs are used by students.
 ## Write a tool that will do the following:
 
 ### 1. First, it will run at each PC and store all the logs of:
-(i) if a student tries to do any
-transfer using USB
+(i) if a student tries to do any transfer using USB
 (ii) if a student tries to do any transfer within a local network and
 (iii) if a student tries to do any transfer using Internet.
 
@@ -20,6 +19,7 @@ transferred to the server in the lab. The IP address of the server is fixed and 
 by all the other PCs. Note that you may need to filter some traffic (for example ARP
 packets or others) that are frequently traversing in the network and not related to
 the copying.
+
 ## USBMonitor and PacketMonitor
 > pyudev
 > scapy
@@ -27,7 +27,7 @@ the copying.
 
 * Logs are stored only locally in the CLIENT_CODE Folder.
 * SQLite is used to keep a track of all the connected Clients.
-* Refer PDF for more.
+* Refer PDF [https://github.com/raunak-r/Network-Monitoring-Tool/blob/master/LabEvalTool%20-%20Group%20NP%201018.pdf] for more.
 
 In addition to the Step 2, your tool shall send the feedback from the student PC to
 the server in real time. As soon as your tool at student PC detects copying from USB,
